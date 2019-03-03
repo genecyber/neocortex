@@ -90,7 +90,6 @@ function CellMatrix(params, cells) {
 	}
 
 	this.resetPredictiveStates = function() {
-		console.log('CELL MATRIX RESET PREDICTIVE')
 		var c, cell;
 		my.predictiveCellHistory.unshift( my.predictiveCells );
 		if( my.predictiveCellHistory.length > my.params.historyLength ) {
@@ -272,7 +271,6 @@ function neocortex () {
 	};
 
 	this.createInputCells = function(params) {
-		console.log('CREATE INPUT CELLS ')
 		var i, cell;
 		var inputCells = new CellMatrix(params);
 		for(i = 0; i < params.inputCellCount; i++) {
@@ -282,7 +280,6 @@ function neocortex () {
 	}
 
 	this.createLayer = function(params, layerType, inputLayerIdx) {
-		console.log('CREATE LAYER ', layerType)
 		var property;
 		var type = ((typeof layerType === 'undefined') ? TM_LAYER : layerType);
 		var inputLayer = ((typeof inputLayerIdx === 'undefined' ) ? null : my.layers[inputLayerIdx]);
@@ -314,7 +311,6 @@ function neocortex () {
 	}
 
 	this.spatialPooling = function(layerIdx, activeInputSDRs, learningEnabled) {
-		console.log('SPACIAL POOLING ', learningEnabled)
 		var c, i, randomIndexes, input, indexes, synapse, column, cell;
 		var learn = ((typeof learningEnabled === 'undefined') ? false : learningEnabled)
 		var layer = my.layers[layerIdx]
@@ -447,7 +443,6 @@ function neocortex () {
 	 * if learning is enabled, learns new temporal patterns.
 	 */
 	this.temporalMemory = function(layerIdx, learningEnabled) {
-		console.log('TEMPORAL MEMORY ', learningEnabled)
 		var learn = ((typeof learningEnabled === 'undefined') ? false : learningEnabled)
 		var layer = my.layers[layerIdx]
 		// Phase 1: Activate
@@ -467,7 +462,6 @@ function neocortex () {
 	 * the heavier-weight classifier logic for making predictions one timestep in the future.
 	 */
 	this.inputMemory = function(layerIdx) {
-		console.log('inputMEMORY ', layerIdx)
 		var i;
 		var layer = my.layers[layerIdx];
 		for( i = 0; i < layer.proximalInputs.length; i++ ) {
@@ -483,7 +477,6 @@ function neocortex () {
 	 * This is Phase 1 of the temporal memory process.
 	 */
 	this.tmActivate = function(layer, learn) {
-		console.log('ACTIVATE ', )
 		var i, c, x, predicted, column, cell, learningCell, synapse;
 		layer.cellMatrix.resetActiveStates()
 		for(i = 0; i < layer.activeColumns.length; i++) {
@@ -548,7 +541,6 @@ function neocortex () {
 	 * This is Phase 2 of the temporal memory process.
 	 */
 	this.tmPredict = function(layer) {
-		console.log('PREDICT')
 		var i, c, column, cell, synapse;
 		layer.cellMatrix.resetPredictiveStates();
 		for (i = 0; i < layer.columns.length; i++) {
@@ -578,7 +570,6 @@ function neocortex () {
 	 * This is Phase 3 of the temporal memory process.
 	 */
 	this.tmLearn = function(layer) {
-		console.log('LEARN ')
 		my.trainCellMatrix(layer.distalInput, layer.cellMatrix, DISTAL, layer.timestep);
 	}
 
@@ -590,7 +581,6 @@ function neocortex () {
 	 */
 
 	this.activateCellMatrix = function(cellMatrix, timestep) {
-			 console.log('ACTIVATE CELL MATRIX ', timestep)
 		var c, s, column, cell, synapse;
 		for (c = 0; c < cellMatrix.activeCells.length; c++) {
 			cell = cellMatrix.activeCells[c];
@@ -672,7 +662,6 @@ function neocortex () {
 	 * good predictions and degrades wrong predictions.
 	 */
 	this.trainCellMatrix = function (cellMatrixTx, cellMatrixRx, inputType, timestep) {
-		console.log('TRAIN CELL MATRIX ', inputType, timestep)
 		var c, s, p, sourcePredicted, randomIndexes, cell, segment, synapse;
 		if ((cellMatrixTx.activeCellHistory.length > 0) && (cellMatrixRx.predictiveCellHistory.length > 0)) {
 			// Enforce correct predictions, degrade wrong predictions
@@ -918,7 +907,6 @@ function neocortex () {
 	 * @param decayConstant: 1/meanLifetime
 	 */
 	this.decay = function(decayConstant, initialValue, timesteps) {
-		console.log('DECAY')
 		return (Math.exp(-decayConstant * timesteps) * initialValue);
 	}
 
@@ -926,15 +914,13 @@ function neocortex () {
 	 * This function calculates a logistic excitement based on overlap
 	 */
 	this.excite = function(currentValue, overlap, minValue, maxValue, xMidpoint, steepness) {
-		console.log('EXCITE')
 		return (currentValue + (maxValue - minValue) / (1 + Math.exp(-steepness * (overlap - xMidpoint))));
 	}
 
-	/**
+	/**		console.log('CLEAR')
 	 * This function clears all layers
 	 */
 	this.clear = function() {
-		console.log('CLEAR')
 		// Loop through all saved layers
 		var i;
 		for(i = 0; i < my.layers.length; i++) {
