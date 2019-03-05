@@ -1,5 +1,4 @@
-
-var d3 = require('d3')
+let d3 = require('d3')
 
 class ScalarEncoder {
 
@@ -18,9 +17,9 @@ class ScalarEncoder {
         this.__createScales()
     }
 
-    // // These linear scales are used to move from input domain to
-    // // output range and back. The are re-created anytime the min
-    // // or max values change, or n changes.
+    // These linear scales are used to move from input domain to
+    // output range and back. The are re-created anytime the min
+    // or max values change, or n changes.
     __createScales() {
         this.scale = d3.scaleLinear()
             .domain(this.inputDomain)
@@ -29,9 +28,9 @@ class ScalarEncoder {
             .domain(this.outputRange)
             .range(this.inputDomain)
     }
-    //
-    // // Setters
-    //
+
+    // Setters
+
     set resolution(r) {
         this._min = 0
         this._max = this.n * r

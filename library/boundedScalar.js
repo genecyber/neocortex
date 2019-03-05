@@ -1,5 +1,4 @@
-
-var ScalarEncoder = require('./scalar.js')
+let ScalarEncoder = require('./scalar')
 
 class BoundedScalarEncoder extends ScalarEncoder {
 

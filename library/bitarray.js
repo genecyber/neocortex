@@ -1,5 +1,9 @@
 
+// bit array based spacial pooler BABSP
+
 var BoundedScalarEncoder = require('./boundedScalar.js')
+
+var length = 256
 
 var ans = new Array(256);
 
@@ -152,6 +156,23 @@ for(var i = 0; i < 256; i++) {
   columns.push(bitArray.toBinaryString(potentials))
 }
 
+
+
+/*
+todo
+
+modify bit array lib to work with any size.
+
+add permanence score for each connection in the pool...
+potential permanance parameter should control this
+set permanance threshold
+only connect cells to the spacial pooler over threshold
+normal distrubution of permanance score around threshold (so thresholding won't affect the number of connections)
+
+activated columns increment connection permanance values of connections to input space within the overlap
+decrement connection permance values that are outside the input space overlap
+
+*/
 setInterval(function () {
   var y = parseInt(Math.random()*max)
   console.log('> ', y)
@@ -171,3 +192,36 @@ setInterval(function () {
   console.log('spacial pool ', spacialpool.slice(0, 20))
   console.log('activated ', activated)
 }, 2000)
+
+each cell has
+  bit array of connections
+  bit array of potentials
+
+on new input.
+  get connection overlap
+  increment and decrement potenials array
+
+
+
+function spacialPooler () {
+  if (! (this instanceof spacialPooler)) return new spacialPooler ()
+  var self = this;
+}
+
+/*
+save and load spacial pooler state from JSON
+*/
+var options = {
+  size: 256
+}
+
+var pool = spacialPooler (options) // size of the pool (must match input pool for now)
+
+pool.activate( [ 0, 0, 1, 0 ] ) // bit array from input
+
+// => return bit array of activated cells
+// => returns prediciting cells
+
+// pool.getPotentials() ----
+
+//

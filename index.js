@@ -155,7 +155,6 @@ function Segment(type, cellRx, column) {
 }
 
 function Layer(params, layerType, proximalInputs, distalInput, apicalInput) {
-	console.log('LAYER')
 	var my = this;
 	this.columns = [];
 	this.activeColumns = [];
@@ -198,7 +197,6 @@ function Layer(params, layerType, proximalInputs, distalInput, apicalInput) {
 	}
 
 	this.clear = function() {
-		console.log('CLEAR LAYER')
 		if( my !== null ) {
 			my.cellMatrix.clear();
 			my.cellMatrix = null;
@@ -407,7 +405,6 @@ function neocortex () {
 				activeColumnCount = 1;
 			}
 		}
-
 		for (i = 0; i < layer.columns.length; i++) {
 			column = layer.columns[i];
 			if (layer.type == TP_LAYER) {
@@ -917,7 +914,7 @@ function neocortex () {
 		return (currentValue + (maxValue - minValue) / (1 + Math.exp(-steepness * (overlap - xMidpoint))));
 	}
 
-	/**		console.log('CLEAR')
+	/**
 	 * This function clears all layers
 	 */
 	this.clear = function() {
