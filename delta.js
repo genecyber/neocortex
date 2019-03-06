@@ -1,10 +1,10 @@
 
 // delta encoder
 
-// var GPIO = require('onoff').Gpio
+var GPIO = require('onoff').Gpio
 var GDAX = require('gdax')
-// var yellow = new GPIO(17, 'out')
-// var green = new GPIO(27, 'out')
+var yellow = new GPIO(17, 'out')
+var green = new GPIO(27, 'out')
 
 var CHANNEL = 'BTC-USD'
 
@@ -94,8 +94,17 @@ function delta (input) {
   controller.temporalMemory(1, true);
   controller.inputMemory(0);
   var answer = predict ()
-  if (answer) console.log('predicted ', (parseInt(prediction)) ? 'HIGH' : 'LOW')
-    else console.log('< ')
+  // if (answer) console.log('predicted ', (parseInt(prediction)) ? 'HIGH' : 'LOW')
+  //   else console.log('< ')
+
+  if (answer) {
+    green.writeSync(1)
+    yellow.writeSync(0)
+  } else {
+    green.writeSync(0)
+    yellow.writeSync(1)
+  }
+
   prediction = answer
   previous = _k
 }
@@ -142,7 +151,6 @@ function predict () {
   }
 }
 
-//
 var websocketCallback = (data) => {
      if (!(data.type === 'done' && data.reason === 'filled'))
          return;
