@@ -1,6 +1,14 @@
 
 // delta encoder
 
+// var GPIO = require('onoff').Gpio
+var GDAX = require('gdax')
+// var yellow = new GPIO(17, 'out')
+// var green = new GPIO(27, 'out')
+
+var CHANNEL = 'BTC-USD'
+
+var websocket = new GDAX.WebsocketClient([ CHANNEL ])
 var neocortex = require('.')
 var ScalarEncoder = require('./library/scalar.js')
 
@@ -10,9 +18,6 @@ var encoder = new ScalarEncoder({
   min: 0, max: MAX,
   w: 512, n: 1024
 })
-
-// console.log(encoder.encode(0))
-// console.log(encoder.encode(1))
 
 function activations (input) {
   var activations = []
@@ -72,10 +77,8 @@ var previous =0;
 
 var prediction = null
 
-setInterval(function () {
-  var _k = (Math.random()>0.4) ? parseInt(++xx) : parseInt(--xx)
-  if (xx >= 50) xx = 0
-  if (xx <= 0) xx = Math.round(Math.random()*1)
+function delta (input) {
+  var _k = input
   var delta = (_k - previous)
   var normal = 0
   if (delta > 0) {
@@ -91,11 +94,11 @@ setInterval(function () {
   controller.temporalMemory(1, true);
   controller.inputMemory(0);
   var answer = predict ()
-  if (answer) console.log('predicted ', answer, ' ', (parseInt(prediction)) ? 'HIGH' : 'LOW')
+  if (answer) console.log('predicted ', (parseInt(prediction)) ? 'HIGH' : 'LOW')
     else console.log('< ')
   prediction = answer
   previous = _k
-}, 500)
+}
 
 function inArray (needle, haystack) {
 	var length = haystack.length;
@@ -139,5 +142,13 @@ function predict () {
   }
 }
 
-
 //
+var websocketCallback = (data) => {
+     if (!(data.type === 'done' && data.reason === 'filled'))
+         return;
+     console.dir(data.price);
+     var p = parseFloat(data.price)
+     if (typeof p === 'number' && !isNaN(p)) delta (p)
+}
+
+websocket.on('message', websocketCallback)
